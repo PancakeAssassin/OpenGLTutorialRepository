@@ -10,9 +10,20 @@
 #define GLFW_INCLUDE_GLU
 #include <GLFW/glfw3.h>
 
-#include <stdio.h>
 #include <iostream>
 #include <string>
+
+//------------------------------------------------
+//Function Prototypes
+//------------------------------------------------
+bool Init();
+bool InitGL();
+void DrawScene();
+GLuint LoadShader(const GLchar* source[], GLenum ShaderType);
+void PrintShaderLog(GLuint shader);
+void PrintProgramLog(GLuint program);
+void Shutdown();
+static void error_callback(int erro, const char* description);
 
 //-----------------------------------------------
 //GLOBALS
@@ -57,6 +68,31 @@ GLint VertexPosition= -1;
 //------------------------------------------------------
 //GLOBALS END
 //------------------------------------------------------
+
+
+
+int main(int argc, char** argv)
+{
+	if (!Init())
+	{
+		std::cout << "Initialization Failed!" << std::endl;
+		exit(EXIT_FAILURE);
+		return -1;
+	}
+
+
+	while (!glfwWindowShouldClose(Window))
+	{
+		
+		DrawScene();
+		glfwSwapBuffers(Window);
+		glfwPollEvents();
+	}
+
+	Shutdown();
+
+	exit(EXIT_SUCCESS);
+}
 
 //Initialize all components
 bool Init()
@@ -281,27 +317,4 @@ void Shutdown()
 static void error_callback(int error, const char* description)
 {
 	fputs(description, stderr);
-}
-
-int main(int argc, char** argv)
-{
-	if (!Init())
-	{
-		std::cout << "Initialization Failed!" << std::endl;
-		exit(EXIT_FAILURE);
-		return -1;
-	}
-
-
-	while (!glfwWindowShouldClose(Window))
-	{
-		
-		DrawScene();
-		glfwSwapBuffers(Window);
-		glfwPollEvents();
-	}
-
-	Shutdown();
-
-	exit(EXIT_SUCCESS);
 }
