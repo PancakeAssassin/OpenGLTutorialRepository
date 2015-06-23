@@ -62,8 +62,6 @@ GLint VertexColor = -1;
 vec3 LightPosition = vec3(0.f, 10.f, 0.f);
 vec3 LightIntensity = vec3(0.8f, 0.8f, 0.8f);
 
-vec4 CubePosition = vec4(0.0f, -10.f, 0.0f, 1.0f);
-
 mat4 Model;
 mat4 View;
 mat4 Projection;
