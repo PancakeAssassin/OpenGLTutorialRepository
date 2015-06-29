@@ -78,7 +78,8 @@ string VertexShaderFile = "Shader.vs";
 string FragmentShaderFile = "Shader.fs";
 
 GLfloat degreeRot = 0.0f;
-const GLfloat degreeRotPerUpdate = 10.f;
+const GLfloat degreeRotPerSec = 20.f;
+const GLfloat degreesPerSec = 45.f;
 
 //---------------------------------------------------
 //					END GLOBALS
@@ -98,7 +99,7 @@ int main(int argc, char** argv)
 	while (!glfwWindowShouldClose(Window))
 	{
 		currentTime = glfwGetTime();
-		deltaTime = lastTime - currentTime;
+		deltaTime = currentTime-lastTime;
 		Update(deltaTime);
 		DrawScene();
 		glfwSwapBuffers(Window);
@@ -237,7 +238,7 @@ bool InitGL()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	//setup camera
-	View = glm::lookAt(vec3(2.5f, 2.f, 3.f),
+	View = glm::lookAt(vec3(0.f, 2.f, 10.f),
 		vec3(0.0f, 0.0f, 0.f),
 		vec3(0.0f, 1.0f, 0.0f));
 
@@ -253,15 +254,23 @@ bool InitGL()
 void Update(double deltaTime)
 {
 	Model = mat4(1.0f);
-	degreeRot += degreeRotPerUpdate * deltaTime;
+	degreeRot += .5f * degreeRotPerSec * deltaTime;
 	if (degreeRot >= 360.f)
 	{
-		degreeRot = degreeRot - 360.f; 
+		degreeRot = degreeRot - 360.f;
 	}
-	float trans= sinf(degreeRot * PI/180);
+	static float degrees = 0.f;
+	 degrees += .5f * degreesPerSec * deltaTime;
+	if (degrees >= 360.f)
+	{
+		degrees = degrees - 360.f;
+	}
+
+	float trans = 2* sinf(degrees * PI / 180);
 	
-	Model = glm::translate(Model, vec3(0.0f, 0.0f, trans*10.f));
+	
 	Model = glm::rotate(Model, degreeRot, vec3(0.f, 1.f, 0.f));
+	Model = glm::translate(Model, vec3(2 * trans, 0.f, 0.f));
 }
 
 void DrawScene()
